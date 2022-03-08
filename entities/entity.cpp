@@ -1,16 +1,16 @@
 #pragma once
 
 #include <math.h>
+#include <string>
 
-#include "definitions.h"
+#include "../definitions.h"
 
 class Entity {
-  int CurrentX = 0;
-  int CurrentY = 0;
-
-  int Size = 1;
 
 public:
+  virtual void Act();
+
+  virtual std::string GetIcon() const;
 
   int GetX() const;
   int GetY() const;
@@ -19,7 +19,20 @@ public:
   void MoveDown();
   void MoveLeft();
   void MoveRight();
+
+protected:
+  int CurrentX = 0;
+  int CurrentY = 0;
+
+  int Size = 1;
+
 };
+
+void Entity::Act() {}
+
+std::string Entity::GetIcon() const {
+  return std::string("X");
+}
 
 int Entity::GetX() const {
   return CurrentX;
