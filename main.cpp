@@ -15,8 +15,7 @@ int main(void) {
   use_default_colors();
 
   // main game cycle
-  Game game;
-  game.Run();
+  Game::GetInstance()->Run();
 
   //curses cleanup
   endwin();

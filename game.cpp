@@ -13,34 +13,58 @@
 
 using namespace std;
 
+// A singleton
 class Game {
+public:
+  static Game* GetInstance();
+
+  void Run();
+  void Draw();
+
+  Entity* GetPlayer();
+
+  template<class T>
+  T* Spawn();
+
+private:
+  void ClearMap();
+  void InitializePlayer();
+  void ConsumePlayerInput(int ch);
+
   vector<Entity*> Entities;
 
   vector<vector<string>> Map;
 
   Entity* Player;
 
-public:
-  Game();
-
-  void Run();
-  void Draw();
+  const int EnemiesAmount = 7;
   atomic<bool> bIsRunning;
 
-private:
-  void ClearMap();
-  void InitializePlayer();
-  void InitializeEnemies();
-  void ConsumePlayerInput(int ch);
+  //Singleton logic
 
-  const int EnemiesAmount = 4;
+  Game();
 
+  static Game* Instance;
 };
+
+Game* Game::Instance = 0;
 
 Game::Game() {
   ClearMap();
-  InitializeEnemies();
   InitializePlayer();
+}
+
+Game* Game::GetInstance() {
+  if (Instance == 0) {
+    Instance = new Game();
+  }
+
+  return Instance;
+}
+
+template<class T>
+T* Game::Spawn() {
+  return new T();
 }
 
 void Game::ClearMap() {
@@ -57,17 +81,8 @@ void Game::ClearMap() {
 }
 
 void Game::InitializePlayer() {
-  Player = new Entity();
+  Player = Spawn<Entity>();
   Entities.push_back(Player);
-}
-
-void Game::InitializeEnemies() {
-  Entities.reserve(EnemiesAmount);
-
-  for (int i = 0; i <= EnemiesAmount; i++) {
-    Entity* NewEnemy = new Enemy();
-    Entities.emplace_back(std::move(NewEnemy));
-  }
 }
 
 void Game::ConsumePlayerInput(int ch) {
@@ -108,9 +123,21 @@ void Game::Draw() {
     ClearMap();
     wmove(stdscr, 0, 0);
 
-    for (Entity* entity : Entities) {
-      entity->Act();
-      Map[entity->GetY()][entity->GetX()] = entity->GetIcon();
+    if (Entities.size() < EnemiesAmount) {
+      Entity* entity = Spawn<Enemy>();
+      Entities.push_back(entity);
+    }
+
+    for (vector<Entity*>::iterator i = Entities.begin(); i != Entities.end(); ) {
+      Entity* entity = *i;
+
+      if (!entity->GetIsMarkedForDestroy()) {
+        entity->Act();
+        Map[entity->GetY()][entity->GetX()] = entity->GetIcon();
+        i++;
+      } else {
+        Entities.erase(i);
+      }
     }
 
     for (int i = 0; i < Map.size(); i++) {

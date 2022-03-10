@@ -1,2 +1,2 @@
-main:
-	g++ main.cpp -o main -lncurses
+build:
+	g++ -std=c++0x main.cpp -o main -lncurses -pthread
