@@ -4,10 +4,9 @@
 #include <vector>
 #include <string>
 #include <unistd.h>
-#include <atomic>
-#include <thread>
 
 #include "definitions.h"
+#include "map.cpp"
 #include "entities/entity.cpp"
 #include "entities/enemy.cpp"
 
@@ -22,6 +21,7 @@ public:
   void Draw();
 
   Entity* GetPlayer();
+  const Map& GetMap();
 
   template<class T>
   T* Spawn();
@@ -33,12 +33,11 @@ private:
 
   vector<Entity*> Entities;
 
-  vector<vector<string>> Map;
+  Map CurrentMap;
 
   Entity* Player;
 
   const int EnemiesAmount = 15;
-  atomic<bool> bIsRunning;
 
   //Singleton logic
 
@@ -68,16 +67,7 @@ T* Game::Spawn() {
 }
 
 void Game::ClearMap() {
-  Map.clear();
-
-  vector<string> NewVec;
-  for(int i = 0; i < ScreenWidth; i++) {
-    NewVec.push_back(" ");
-  }
-
-  for(int i = 0; i < ScreenHeight; i++) {
-    Map.push_back(NewVec);
-  }
+  CurrentMap.Clear();
 }
 
 void Game::InitializePlayer() {
@@ -101,52 +91,49 @@ void Game::ConsumePlayerInput(int ch) {
 }
 
 void Game::Run() {
+  Draw();
+
   int ch = getch();
 
-  bIsRunning = true;
-  thread Drawing(&Game::Draw, this);
+  while(ch != 'q' && ch != 'Q') {
+    if (ch > 0) {
+      // Process input
+      ConsumePlayerInput(ch);
 
-  while(ch != 'q') {
-    // Process input
-    ConsumePlayerInput(ch);
+      Draw();
+    }
 
     // Read new character
     ch = getch();
   }
-
-  bIsRunning = false;
-  Drawing.join();
 };
 
 void Game::Draw() {
-  while(bIsRunning) {
-    ClearMap();
-    wmove(stdscr, 0, 0);
+  ClearMap();
 
-    if (Entities.size() < EnemiesAmount) {
-      Entity* entity = Spawn<Enemy>();
-      Entities.push_back(entity);
+  if (Entities.size() < EnemiesAmount) {
+    Entity* entity = Spawn<Enemy>();
+    Entities.push_back(entity);
+  }
+
+  wmove(stdscr, 0, 0);
+
+  for (vector<Entity*>::iterator i = Entities.begin(); i != Entities.end(); ) {
+    Entity* entity = *i;
+
+    if (!entity->GetIsMarkedForDestroy()) {
+      entity->Act();
+      CurrentMap.SetCharAtLocation(entity->GetX(), entity->GetY(), entity->GetIcon());
+      i++;
+    } else {
+      Entities.erase(i);
     }
+  }
 
-    for (vector<Entity*>::iterator i = Entities.begin(); i != Entities.end(); ) {
-      Entity* entity = *i;
-
-      if (!entity->GetIsMarkedForDestroy()) {
-        entity->Act();
-        Map[entity->GetY()][entity->GetX()] = entity->GetIcon();
-        i++;
-      } else {
-        Entities.erase(i);
-      }
+  for (int y = 0; y < CurrentMap.HorizontalSize(); y++) {
+    for (int x = 0; x < CurrentMap.VerticalSize(); x++) {
+      printw(CurrentMap.GetCharAtLocation(x, y).c_str());
     }
-
-    for (int i = 0; i < Map.size(); i++) {
-      for (int j = 0; j < Map[i].size(); j++) {
-        printw(Map[i][j].c_str());
-      }
-      printw(string("\n").c_str());
-    }
-
-    usleep(30000);
+    printw(string("\n").c_str());
   }
 };
