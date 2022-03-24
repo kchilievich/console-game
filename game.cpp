@@ -37,7 +37,7 @@ private:
 
   Entity* Player;
 
-  const int EnemiesAmount = 7;
+  const int EnemiesAmount = 15;
   atomic<bool> bIsRunning;
 
   //Singleton logic
@@ -72,7 +72,7 @@ void Game::ClearMap() {
 
   vector<string> NewVec;
   for(int i = 0; i < ScreenWidth; i++) {
-    NewVec.push_back(".");
+    NewVec.push_back(" ");
   }
 
   for(int i = 0; i < ScreenHeight; i++) {
@@ -147,6 +147,6 @@ void Game::Draw() {
       printw(string("\n").c_str());
     }
 
-    usleep(50000);
+    usleep(30000);
   }
 };
