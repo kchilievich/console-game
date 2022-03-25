@@ -9,6 +9,7 @@
 #include "map.cpp"
 #include "entities/entity.cpp"
 #include "entities/enemy.cpp"
+#include "entities/player.cpp"
 
 using namespace std;
 
@@ -21,23 +22,20 @@ public:
   void Draw();
 
   Entity* GetPlayer();
-  const Map& GetMap();
+  Map* GetMap();
 
   template<class T>
   T* Spawn();
 
 private:
-  void ClearMap();
   void InitializePlayer();
   void ConsumePlayerInput(int ch);
 
   vector<Entity*> Entities;
 
-  Map CurrentMap;
+  Map* CurrentMap;
 
-  Entity* Player;
-
-  const int EnemiesAmount = 15;
+  Player* CurrentPlayer;
 
   //Singleton logic
 
@@ -49,8 +47,9 @@ private:
 Game* Game::Instance = 0;
 
 Game::Game() {
-  ClearMap();
+  CurrentMap = new Map();
   InitializePlayer();
+  CurrentMap->UpdateEntities(Entities);
 }
 
 Game* Game::GetInstance() {
@@ -66,27 +65,23 @@ T* Game::Spawn() {
   return new T();
 }
 
-void Game::ClearMap() {
-  CurrentMap.Clear();
-}
-
 void Game::InitializePlayer() {
-  Player = Spawn<Entity>();
-  Entities.push_back(Player);
+  CurrentPlayer = Spawn<Player>();
+  Entities.push_back(CurrentPlayer);
 }
 
 void Game::ConsumePlayerInput(int ch) {
   if (ch == KEY_DOWN) {
-    Player->MoveDown();
+    CurrentPlayer->MoveDown();
   }
   else if (ch == KEY_UP) {
-    Player->MoveUp();
+    CurrentPlayer->MoveUp();
   }
   else if (ch == KEY_LEFT) {
-    Player->MoveLeft();
+    CurrentPlayer->MoveLeft();
   }
   else if (ch == KEY_RIGHT) {
-    Player->MoveRight();
+    CurrentPlayer->MoveRight();
   }
 }
 
@@ -109,13 +104,6 @@ void Game::Run() {
 };
 
 void Game::Draw() {
-  ClearMap();
-
-  if (Entities.size() < EnemiesAmount) {
-    Entity* entity = Spawn<Enemy>();
-    Entities.push_back(entity);
-  }
-
   wmove(stdscr, 0, 0);
 
   for (vector<Entity*>::iterator i = Entities.begin(); i != Entities.end(); ) {
@@ -123,17 +111,25 @@ void Game::Draw() {
 
     if (!entity->GetIsMarkedForDestroy()) {
       entity->Act();
-      CurrentMap.SetCharAtLocation(entity->GetX(), entity->GetY(), entity->GetIcon());
+      CurrentMap->UpdateEntities(Entities);
       i++;
     } else {
       Entities.erase(i);
     }
   }
 
-  for (int y = 0; y < CurrentMap.HorizontalSize(); y++) {
-    for (int x = 0; x < CurrentMap.VerticalSize(); x++) {
-      printw(CurrentMap.GetCharAtLocation(x, y).c_str());
+  // Draw Map
+  for (int y = 0; y < CurrentMap->HorizontalSize(); y++) {
+    for (int x = 0; x < CurrentMap->VerticalSize(); x++) {
+      int ColorPair = CurrentMap->GetColorAtLocation(x, y);
+      attron(COLOR_PAIR(ColorPair));
+      printw(CurrentMap->GetCharAtLocation(x, y).c_str());
+      attroff(COLOR_PAIR(ColorPair));
     }
     printw(string("\n").c_str());
   }
+
+  // Draw UI
+  wmove(stdscr, CurrentMap->HorizontalSize() + 1, 1);
+  printw(string("Cool Game").c_str());
 };

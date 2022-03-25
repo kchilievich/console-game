@@ -1,5 +1,7 @@
 #pragma once
 
+#include "definitions.h"
+#include "entities/entity.cpp"
 #include <vector>
 #include <string>
 
@@ -7,42 +9,79 @@ using namespace std;
 
 class Map {
 public:
-  void Clear();
+  Map();
+  void AddEntity(Entity* NewEntity);
+  void UpdateEntities(vector<Entity*> Entities);
+
   int HorizontalSize();
   int VerticalSize();
 
+  Entity* GetEntity(int x, int y);
+
   string GetCharAtLocation(int x, int y);
-  void SetCharAtLocation(int x, int y, string str);
+  int GetColorAtLocation(int x, int y);
 
 private:
-  vector<vector<string>> Container;
+  void Clear();
+
+  vector<vector<Entity*>> EntitiesMap;
 };
 
-void Map::Clear() {
-  Container.clear();
-
-  vector<string> NewVec;
-  for(int i = 0; i < ScreenWidth; i++) {
-    NewVec.push_back(" ");
-  }
+Map::Map() {
+  vector<Entity*> NewVec(ScreenWidth, nullptr);
 
   for(int i = 0; i < ScreenHeight; i++) {
-    Container.push_back(NewVec);
+    EntitiesMap.push_back(NewVec);
   }
+}
+
+void Map::AddEntity(Entity* NewEntity) {
+  int x = NewEntity->GetX();
+  int y = NewEntity->GetY();
+
+  if (EntitiesMap[y][x] != nullptr) {
+    // TODO: do something about it ffs
+  }
+
+  EntitiesMap[y][x] = NewEntity;
+}
+
+void Map::UpdateEntities(vector<Entity*> Entities) {
+  Clear();
+
+  for (Entity* _Entity : Entities) {
+    AddEntity(_Entity);
+  }
+}
+
+Entity* Map::GetEntity(int x, int y) {
+  return EntitiesMap[y][x];
 }
 
 int Map::HorizontalSize() {
-  return Container.size();
+  return EntitiesMap.size();
 }
 
 int Map::VerticalSize() {
-  return Container[0].size();
+  return EntitiesMap[0].size();
 }
 
 string Map::GetCharAtLocation(int x, int y) {
-  return Container[y][x];
+  Entity* EntityAtLocation = GetEntity(x, y);
+
+  return EntityAtLocation != nullptr ? EntityAtLocation->GetIcon()->Symbol : DEFAULT_SYMBOL;
 }
 
-void Map::SetCharAtLocation(int x, int y, string str) {
-  Container[y][x] = str;
+int Map::GetColorAtLocation(int x, int y) {
+  Entity* EntityAtLocation = GetEntity(x, y);
+
+  return EntityAtLocation != nullptr ? EntityAtLocation->GetIcon()->Color : DEFAULT_COLOR_PAIR;
+}
+
+void Map::Clear() {
+  for (int y = 0; y < HorizontalSize(); y++) {
+    for (int x = 0; x < VerticalSize(); x++) {
+      EntitiesMap[y][x] = nullptr;
+    }
+  }
 }

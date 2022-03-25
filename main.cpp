@@ -14,6 +14,10 @@ int main(void) {
   start_color();
   use_default_colors();
 
+  init_pair(DEFAULT_COLOR_PAIR, COLOR_YELLOW, COLOR_GREEN);
+  init_pair(PLAYER_COLOR_PAIR, COLOR_WHITE, COLOR_GREEN);
+  init_pair(ENEMY_COLOR_PAIR, COLOR_RED, COLOR_GREEN);
+
   // main game cycle
   Game::GetInstance()->Run();
 

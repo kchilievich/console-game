@@ -8,9 +8,11 @@
 class Entity {
 
 public:
+  Entity();
+
   virtual void Act();
 
-  virtual std::string GetIcon() const;
+  const Icon* GetIcon() const;
 
   int GetX() const;
   int GetY() const;
@@ -28,8 +30,9 @@ protected:
   int CurrentX = 0;
   int CurrentY = 0;
 
-  int Size = 1;
+  Icon* MapIcon;
 
+  virtual void SetupIcon();
   virtual void Reset();
 
 private:
@@ -37,12 +40,22 @@ private:
 
 };
 
+Entity::Entity() {
+  MapIcon = new Icon();
+  SetupIcon();
+}
+
 void Entity::Act() {}
 
 void Entity::Reset() {}
 
-std::string Entity::GetIcon() const {
-  return std::string("X");
+void Entity::SetupIcon() {
+  MapIcon->Symbol = std::string("?");
+  MapIcon->Color = DEFAULT_COLOR_PAIR;
+}
+
+const Icon* Entity::GetIcon() const {
+  return MapIcon;
 }
 
 int Entity::GetX() const {

@@ -7,14 +7,20 @@ public:
   Enemy();
 
   virtual void Act() override;
-  virtual std::string GetIcon() const override;
 
 protected:
+  virtual void SetupIcon() override;
   virtual void Reset() override;
 };
 
 Enemy::Enemy() {
   Reset();
+  SetupIcon();
+}
+
+void Enemy::SetupIcon() {
+  MapIcon->Symbol = std::string("<");
+  MapIcon->Color = ENEMY_COLOR_PAIR;
 }
 
 void Enemy::Reset() {
@@ -28,8 +34,4 @@ void Enemy::Act() {
   } else {
     Reset();
   }
-}
-
-std::string Enemy::GetIcon() const {
-  return std::string("<");
 }
