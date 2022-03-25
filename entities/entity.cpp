@@ -7,12 +7,15 @@
 #include "../game.h"
 #include "../map.h"
 
+using namespace std;
+
 class Entity {
 
 public:
   Entity();
 
   virtual void Act();
+  void PerformTurn();
 
   const Icon* GetIcon() const;
 
@@ -34,12 +37,15 @@ protected:
   int CurrentX = 0;
   int CurrentY = 0;
 
+  int ActDelay = 2;
+
   Icon* MapIcon;
 
   virtual void SetupIcon();
   virtual void Reset();
 
 private:
+  int CurrentActDelay;
   bool bIsMarkedForDestroy = false;
 
   bool CheckIntersectionOnMap(int x, int y) const;
@@ -49,6 +55,14 @@ private:
 Entity::Entity() {
   MapIcon = new Icon();
   SetupIcon();
+  CurrentActDelay = ActDelay;
+}
+
+void Entity::PerformTurn() {
+  if (--CurrentActDelay <= 0) {
+    Act();
+    CurrentActDelay = ActDelay;
+  }
 }
 
 void Entity::Act() {}
@@ -56,7 +70,7 @@ void Entity::Act() {}
 void Entity::Reset() {}
 
 void Entity::SetupIcon() {
-  MapIcon->Symbol = std::string("?");
+  MapIcon->Symbol = string("?");
   MapIcon->Color = DEFAULT_COLOR_PAIR;
 }
 

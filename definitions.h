@@ -15,3 +15,8 @@ struct Icon {
   int Color;
   std::string Symbol;
 };
+
+struct Point {
+  int X;
+  int Y;
+};

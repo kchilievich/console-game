@@ -22,8 +22,8 @@ class Game {
   void Run();
   void Draw();
 
-  Entity* GetPlayer();
-  Map* GetMap();
+  Player* GetPlayer() const;
+  Map* GetMap() const;
 
   template<class T>
   T* Spawn();

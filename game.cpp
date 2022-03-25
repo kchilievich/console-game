@@ -7,11 +7,12 @@
 Game::Game() {
   CurrentMap = new Map();
   InitializePlayer();
-  CurrentMap->UpdateEntities(Entities);
 
   // TODO: Remove test section
-  Entity* T = Spawn<Enemy>();
-  Entities.push_back(T);
+  Enemy* T = Spawn<Enemy>();
+  T->SetTarget(CurrentPlayer);
+
+  CurrentMap->UpdateEntities(Entities);
 }
 
 Game* Game::GetInstance() {
@@ -24,16 +25,22 @@ Game* Game::GetInstance() {
 
 template<class T>
 T* Game::Spawn() {
-  return new T();
+  T* NewInstance = new T();
+  Entities.push_back(static_cast<Entity*>(NewInstance));
+
+  return NewInstance;
 }
 
-Map* Game::GetMap() {
+Map* Game::GetMap() const {
   return CurrentMap;
+}
+
+Player* Game::GetPlayer() const {
+  return CurrentPlayer;
 }
 
 void Game::InitializePlayer() {
   CurrentPlayer = Spawn<Player>();
-  Entities.push_back(CurrentPlayer);
 }
 
 void Game::ConsumePlayerInput(int ch) {
@@ -76,7 +83,7 @@ void Game::Draw() {
     Entity* entity = *i;
 
     if (!entity->GetIsMarkedForDestroy()) {
-      entity->Act();
+      entity->PerformTurn();
       CurrentMap->UpdateEntities(Entities);
       i++;
     } else {
@@ -92,10 +99,10 @@ void Game::Draw() {
       printw(CurrentMap->GetCharAtLocation(x, y).c_str());
       attroff(COLOR_PAIR(ColorPair));
     }
-    printw(std::string("\n").c_str());
+    printw("\n");
   }
 
   // Draw UI
   wmove(stdscr, CurrentMap->HorizontalSize(), 0);
-  printw(std::string("Cool Game").c_str());
+  printw("Cool Game");
 };
