@@ -1,2 +1,2 @@
 build:
-	g++ -std=c++0x main.cpp -o main -lncurses -pthread
+	g++ main.cpp -o game -lncurses

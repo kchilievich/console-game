@@ -24,7 +24,7 @@ void Enemy::SetupIcon() {
 }
 
 void Enemy::Reset() {
-  CurrentX = ScreenWidth - 1;
+  CurrentX = rand() % (ScreenWidth - 1);
   CurrentY = rand() % (ScreenHeight - 1);
 }
 

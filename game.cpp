@@ -1,55 +1,17 @@
-#pragma once
-
-#include <iostream>
-#include <vector>
-#include <string>
-#include <unistd.h>
-
-#include "definitions.h"
+#include "game.h"
 #include "map.cpp"
 #include "entities/entity.cpp"
 #include "entities/enemy.cpp"
 #include "entities/player.cpp"
 
-using namespace std;
-
-// A singleton
-class Game {
-public:
-  static Game* GetInstance();
-
-  void Run();
-  void Draw();
-
-  Entity* GetPlayer();
-  Map* GetMap();
-
-  template<class T>
-  T* Spawn();
-
-private:
-  void InitializePlayer();
-  void ConsumePlayerInput(int ch);
-
-  vector<Entity*> Entities;
-
-  Map* CurrentMap;
-
-  Player* CurrentPlayer;
-
-  //Singleton logic
-
-  Game();
-
-  static Game* Instance;
-};
-
-Game* Game::Instance = 0;
-
 Game::Game() {
   CurrentMap = new Map();
   InitializePlayer();
   CurrentMap->UpdateEntities(Entities);
+
+  // TODO: Remove test section
+  Entity* T = Spawn<Enemy>();
+  Entities.push_back(T);
 }
 
 Game* Game::GetInstance() {
@@ -63,6 +25,10 @@ Game* Game::GetInstance() {
 template<class T>
 T* Game::Spawn() {
   return new T();
+}
+
+Map* Game::GetMap() {
+  return CurrentMap;
 }
 
 void Game::InitializePlayer() {
@@ -126,10 +92,10 @@ void Game::Draw() {
       printw(CurrentMap->GetCharAtLocation(x, y).c_str());
       attroff(COLOR_PAIR(ColorPair));
     }
-    printw(string("\n").c_str());
+    printw(std::string("\n").c_str());
   }
 
   // Draw UI
-  wmove(stdscr, CurrentMap->HorizontalSize() + 1, 1);
-  printw(string("Cool Game").c_str());
+  wmove(stdscr, CurrentMap->HorizontalSize(), 0);
+  printw(std::string("Cool Game").c_str());
 };
