@@ -44,18 +44,7 @@ void Game::InitializePlayer() {
 }
 
 void Game::ConsumePlayerInput(int ch) {
-  if (ch == KEY_DOWN) {
-    CurrentPlayer->MoveDown();
-  }
-  else if (ch == KEY_UP) {
-    CurrentPlayer->MoveUp();
-  }
-  else if (ch == KEY_LEFT) {
-    CurrentPlayer->MoveLeft();
-  }
-  else if (ch == KEY_RIGHT) {
-    CurrentPlayer->MoveRight();
-  }
+  CurrentPlayer->ProcessInput(ch);
 }
 
 void Game::Run() {

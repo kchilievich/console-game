@@ -7,6 +7,11 @@
 #include "../game.h"
 #include "../map.h"
 
+// whatever the fuck it is it works
+#include "../components/attributes_component.h"
+#include "../components/attributes_component.cpp"
+// -------------------------------
+
 using namespace std;
 
 class Entity {
@@ -44,6 +49,8 @@ protected:
   virtual void SetupIcon();
   virtual void Reset();
 
+  Attributes* AttributesComponent;
+
 private:
   int CurrentActDelay;
   bool bIsMarkedForDestroy = false;
@@ -56,6 +63,8 @@ Entity::Entity() {
   MapIcon = new Icon();
   SetupIcon();
   CurrentActDelay = ActDelay;
+
+  AttributesComponent = new Attributes();
 }
 
 void Entity::PerformTurn() {
