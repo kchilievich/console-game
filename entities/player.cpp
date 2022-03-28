@@ -26,6 +26,7 @@ public:
 
 protected:
   virtual void SetupIcon() override;
+  virtual void OnDestroy() override;
 };
 
 Player::Player() {
@@ -35,4 +36,8 @@ Player::Player() {
 void Player::SetupIcon() {
   MapIcon->Symbol = std::string("X");
   MapIcon->Color = PLAYER_COLOR_PAIR;
+}
+
+void Player::OnDestroy() {
+  Game::GetInstance()->Over();
 }

@@ -31,6 +31,10 @@ T* Game::Spawn() {
   return NewInstance;
 }
 
+void Game::Over() {
+  bIsRunning = false;
+}
+
 Map* Game::GetMap() const {
   return CurrentMap;
 }
@@ -52,7 +56,7 @@ void Game::Run() {
 
   int ch = getch();
 
-  while(ch != 'q' && ch != 'Q') {
+  while(bIsRunning && ch != 'q' && ch != 'Q') {
     if (ch > 0) {
       // Process input
       ConsumePlayerInput(ch);

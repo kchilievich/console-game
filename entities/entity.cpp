@@ -36,7 +36,6 @@ public:
   void MoveRight();
 
   void Destroy();
-  virtual void OnDestroy();
   bool GetIsMarkedForDestroy() const;
 
   virtual bool CanBeSteppedUpon() const;
@@ -53,6 +52,8 @@ protected:
 
   virtual void SetupIcon();
   virtual void Reset();
+
+  virtual void OnDestroy();
 
   Attributes* AttributesComponent;
 

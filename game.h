@@ -28,6 +28,8 @@ class Game {
   template<class T>
   T* Spawn();
 
+  void Over();
+
  private:
   void InitializePlayer();
   void ConsumePlayerInput(int ch);
@@ -43,6 +45,7 @@ class Game {
   Game();
 
   static Game* Instance;
+  bool bIsRunning = true;
 };
 
 Game* Game::Instance = 0;
