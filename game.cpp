@@ -73,12 +73,13 @@ void Game::Draw() {
 
     if (!entity->GetIsMarkedForDestroy()) {
       entity->PerformTurn();
-      CurrentMap->UpdateEntities(Entities);
       i++;
     } else {
       Entities.erase(i);
     }
   }
+
+  CurrentMap->UpdateEntities(Entities);
 
   // Draw Map
   for (int y = 0; y < CurrentMap->HorizontalSize(); y++) {
@@ -93,5 +94,8 @@ void Game::Draw() {
 
   // Draw UI
   wmove(stdscr, CurrentMap->HorizontalSize(), 0);
-  printw("Cool Game");
+
+  printw("Health: %.1f / %.1f\n",
+         CurrentPlayer->GetAttributes()->GetHealth(),
+         CurrentPlayer->GetAttributes()->GetMaxHealth());
 };

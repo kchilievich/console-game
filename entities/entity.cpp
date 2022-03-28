@@ -27,6 +27,9 @@ public:
   int GetX() const;
   int GetY() const;
 
+  // returns actual damage received
+  float ApplyDamage(float Amount, Entity* Source);
+
   void MoveUp();
   void MoveDown();
   void MoveLeft();
@@ -37,6 +40,8 @@ public:
   bool GetIsMarkedForDestroy() const;
 
   virtual bool CanBeSteppedUpon() const;
+
+  Attributes* GetAttributes() const;
 
 protected:
   int CurrentX = 0;
@@ -87,6 +92,10 @@ const Icon* Entity::GetIcon() const {
   return MapIcon;
 }
 
+Attributes* Entity::GetAttributes() const {
+  return AttributesComponent;
+}
+
 bool Entity::CanBeSteppedUpon() const {
   return false;
 }
@@ -97,6 +106,16 @@ int Entity::GetX() const {
 
 int Entity::GetY() const {
   return CurrentY;
+}
+
+float Entity::ApplyDamage(float Amount, Entity* Source) {
+  AttributesComponent->ModifyHealth(-Amount);
+
+  if (AttributesComponent->GetHealth() <= 0) {
+    Destroy();
+  }
+
+  return Amount;
 }
 
 void Entity::MoveUp() {

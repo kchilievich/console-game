@@ -40,15 +40,21 @@ void Enemy::SetTarget(Entity* NewTarget) {
 }
 
 void Enemy::Act() {
-  Point NextPoint = Bresenham(CurrentX, CurrentY, Target->GetX(), Target->GetY());
+  if (Target != nullptr) {
+    // Follow target
+    int TargetX = Target->GetX();
+    int TargetY = Target->GetY();
+    Point NextPoint = Bresenham(CurrentX, CurrentY, Target->GetX(), Target->GetY());
 
-  if (NextPoint.X < CurrentX) { MoveLeft(); }
-  else if (NextPoint.X > CurrentX) { MoveRight(); }
-  else if (NextPoint.Y > CurrentY) { MoveDown(); }
-  else if (NextPoint.Y < CurrentY) { MoveUp(); }
+    if (NextPoint.X < CurrentX) { MoveLeft(); }
+    else if (NextPoint.X > CurrentX) { MoveRight(); }
+    else if (NextPoint.Y > CurrentY) { MoveDown(); }
+    else if (NextPoint.Y < CurrentY) { MoveUp(); }
 
-  // if sees player
-  // go to player
-  // else
-  // move around
+    //Attack target
+    if (abs(TargetX - CurrentX) + abs(TargetY - CurrentY) <= 1) {
+      // TODO: Move damage amount somewhere
+      Target->ApplyDamage(15.f, this);
+    }
+  }
 }
