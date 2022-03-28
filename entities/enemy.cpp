@@ -54,7 +54,9 @@ void Enemy::Act() {
     //Attack target
     if (abs(TargetX - CurrentX) + abs(TargetY - CurrentY) <= 1) {
       // TODO: Move damage amount somewhere
-      Target->ApplyDamage(15.f, this);
+      float DamageDone = Target->ApplyDamage(15.f, this);
+
+      Game::GetInstance()->AddMessage("Enemy attacked player by 15.f");
     }
   }
 }

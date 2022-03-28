@@ -18,6 +18,7 @@ using namespace std;
 class Game {
  public:
   static Game* GetInstance();
+  void AddMessage(string NewMessage);
 
   void Run();
   void Draw();
@@ -35,6 +36,7 @@ class Game {
   void ConsumePlayerInput(int ch);
 
   vector<Entity*> Entities;
+  vector<string> Messages;
 
   Map* CurrentMap;
 

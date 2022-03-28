@@ -23,6 +23,10 @@ Game* Game::GetInstance() {
   return Instance;
 }
 
+void Game::AddMessage(string NewMessage) {
+  Messages.push_back(NewMessage);
+}
+
 template<class T>
 T* Game::Spawn() {
   T* NewInstance = new T();
@@ -81,9 +85,9 @@ void Game::Draw() {
     } else {
       Entities.erase(i);
     }
-  }
 
-  CurrentMap->UpdateEntities(Entities);
+    CurrentMap->UpdateEntities(Entities);
+  }
 
   // Draw Map
   for (int y = 0; y < CurrentMap->HorizontalSize(); y++) {
@@ -102,4 +106,10 @@ void Game::Draw() {
   printw("Health: %.1f / %.1f\n",
          CurrentPlayer->GetAttributes()->GetHealth(),
          CurrentPlayer->GetAttributes()->GetMaxHealth());
+
+  // Print messages
+  for(int i = 0; i < Messages.size(); i++) {
+    mvprintw(i, CurrentMap->VerticalSize(), Messages[i].c_str());
+  }
+  Messages.clear();
 };

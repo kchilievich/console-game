@@ -13,7 +13,7 @@ protected:
   virtual void TurnInternal() override;
 
 private:
-  float Health = 99;
-  float MaxHealthBase = 100;
-  float MaxHealthModifier = 1;
+  float Health = 99.f;
+  float MaxHealthBase = 100.f;
+  float MaxHealthModifier = 1.f;
 };
