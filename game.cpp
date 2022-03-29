@@ -3,6 +3,7 @@
 #include "entities/entity.cpp"
 #include "entities/enemy.cpp"
 #include "entities/player.cpp"
+#include "entities/actions/action.h"
 
 Game::Game() {
   CurrentMap = new Map();
@@ -106,6 +107,12 @@ void Game::Draw() {
   printw("Health: %.1f / %.1f\n",
          CurrentPlayer->GetAttributes()->GetHealth(),
          CurrentPlayer->GetAttributes()->GetMaxHealth());
+
+  const vector<Action*> Actions = CurrentPlayer->GetActions();
+
+  for(int i = 0; i < Actions.size(); i++) {
+    printw("Action %d:%s ", i, Actions[i]->GetName().c_str());
+  }
 
   // Print messages
   for(int i = 0; i < Messages.size(); i++) {
