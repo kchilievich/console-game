@@ -1,24 +1,10 @@
 #pragma once
 
 #include "../utility.cpp"
-#include "entity.cpp"
 #include "player.cpp"
 
-class Enemy : public Entity {
-public:
-  Enemy();
+#include "enemy.h"
 
-  virtual void Act() override;
-
-  void SetTarget(Entity* NewPlayer);
-
-protected:
-  virtual void SetupIcon() override;
-  virtual void Reset() override;
-
-private:
-  Entity* Target = nullptr;
-};
 
 Enemy::Enemy() {
   Reset();
