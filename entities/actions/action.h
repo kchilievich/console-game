@@ -2,10 +2,7 @@
 
 class Action {
  public:
-  string GetName() const { return Name; };
+  virtual string GetName() const { return "Nothing"; };
 
   virtual void Perform(Entity* Source, Entity* Target) {};
-
- protected:
-  string Name = "Nothing";
 };

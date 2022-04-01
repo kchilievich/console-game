@@ -2,6 +2,8 @@
 
 #include "entity.cpp"
 
+class Action;
+
 class Enemy : public Entity {
  public:
   Enemy();
@@ -13,6 +15,8 @@ class Enemy : public Entity {
  protected:
   virtual void SetupIcon() override;
   virtual void Reset() override;
+
+  Action* AttackAction;
 
  private:
   Entity* Target = nullptr;

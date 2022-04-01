@@ -4,10 +4,9 @@
 
 class Attack : public Action {
 public:
-  virtual void Perform(Entity* Source, Entity* Target);
+  virtual string GetName() const override { return "Basic Attack"; }
 
-protected:
-  string Name = "Attack";
+  virtual void Perform(Entity* Source, Entity* Target);
 };
 
 void Attack::Perform(Entity* Source, Entity* Target) {

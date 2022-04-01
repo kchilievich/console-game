@@ -111,7 +111,7 @@ void Game::Draw() {
   const vector<Action*> Actions = CurrentPlayer->GetActions();
 
   for(int i = 0; i < Actions.size(); i++) {
-    printw("Action %d:%s ", i, Actions[i]->GetName().c_str());
+    printw("| Action %d - %s |", i, Actions[i]->GetName().c_str());
   }
 
   // Print messages

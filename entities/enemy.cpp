@@ -2,13 +2,15 @@
 
 #include "../utility.cpp"
 #include "player.cpp"
+#include "actions/attack.cpp"
 
 #include "enemy.h"
-
 
 Enemy::Enemy() {
   Reset();
   SetupIcon();
+
+  AttackAction = new Attack();
 }
 
 void Enemy::SetupIcon() {
@@ -39,10 +41,7 @@ void Enemy::Act() {
 
     //Attack target
     if (abs(TargetX - CurrentX) + abs(TargetY - CurrentY) <= 1) {
-      // TODO: Move damage amount somewhere
-      float DamageDone = Target->ApplyDamage(15.f, this);
-
-      Game::GetInstance()->AddMessage("Enemy attacked player by 15.f");
+      AttackAction->Perform(this, Target);
     }
   }
 }
