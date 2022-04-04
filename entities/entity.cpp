@@ -9,6 +9,8 @@
 
 // whatever the fuck it is it works
 #include "../components/attributes_component.h"
+#include "../components/base_component.h"
+#include "../components/base_component.cpp"
 #include "../components/attributes_component.cpp"
 // -------------------------------
 
@@ -42,6 +44,9 @@ public:
 
   Attributes* GetAttributes() const;
 
+  void SetThisPtr(shared_ptr<Entity> NewThisPtr);
+  shared_ptr<Entity> GetThisPtr() const;
+
 protected:
   int CurrentX = 0;
   int CurrentY = 0;
@@ -50,12 +55,13 @@ protected:
 
   Icon* MapIcon;
 
+  Attributes* AttributesComponent;
+  shared_ptr<Entity> ThisPtr;
+
   virtual void SetupIcon();
   virtual void Reset();
 
   virtual void OnDestroy();
-
-  Attributes* AttributesComponent;
 
 private:
   int CurrentActDelay;
@@ -71,6 +77,7 @@ Entity::Entity() {
   CurrentActDelay = ActDelay;
 
   AttributesComponent = new Attributes();
+  AttributesComponent->SetOwner(ThisPtr);
 }
 
 void Entity::PerformTurn() {
@@ -171,4 +178,12 @@ bool Entity::CheckIntersectionOnMap(int x, int y) const {
   }
 
   return true;
+}
+
+void Entity::SetThisPtr(shared_ptr<Entity> NewThisPtr) {
+  ThisPtr = NewThisPtr;
+}
+
+shared_ptr<Entity> Entity::GetThisPtr() const {
+  return ThisPtr;
 }

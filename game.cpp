@@ -30,10 +30,12 @@ void Game::AddMessage(string NewMessage) {
 
 template<class T>
 T* Game::Spawn() {
-  T* NewInstance = new T();
-  Entities.push_back(static_cast<Entity*>(NewInstance));
+  shared_ptr<T> NewInstance(new T());
+  Entity* EntityInstance = static_cast<Entity*>(NewInstance.get());
+  Entities.push_back(EntityInstance);
+  EntityInstance->SetThisPtr(NewInstance);
 
-  return NewInstance;
+  return NewInstance.get();
 }
 
 void Game::Over() {
