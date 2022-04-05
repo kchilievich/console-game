@@ -9,6 +9,7 @@ public:
   Player();
 
   const vector<Action*> GetActions() const;
+  virtual std::string GetName() const override { return "Player"; }
 
   void ProcessInput(int Char);
 

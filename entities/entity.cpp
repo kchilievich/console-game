@@ -25,6 +25,7 @@ public:
   void PerformTurn();
 
   const Icon* GetIcon() const;
+  virtual std::string GetName() const { return "Entity"; }
 
   int GetX() const;
   int GetY() const;

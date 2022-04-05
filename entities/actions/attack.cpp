@@ -1,6 +1,7 @@
 #pragma once
 
 #include "action.h"
+#include "../../utility.cpp"
 
 class Attack : public Action {
 public:
@@ -16,6 +17,10 @@ void Attack::Perform(Entity* Source, Entity* Target) {
 
   float DamageDone = Target->ApplyDamage(20.f, Source);
 
-  //TODO: add interpolation somehow
-  Game::GetInstance()->AddMessage("attack by 20.f");
+  std::string Msg = FormatString("%s done %.2f damage to %s",
+                                 Source->GetName().c_str(),
+                                 DamageDone,
+                                 Target->GetName().c_str());
+
+  Game::GetInstance()->AddMessage(Msg);
 }

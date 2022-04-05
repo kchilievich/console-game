@@ -1,6 +1,17 @@
+#pragma once
+
 #include <cstdlib>
 
 #include "definitions.h"
+
+template<typename... Args>
+std::string FormatString(const char *fmt, Args... args)
+{
+  const size_t n = snprintf(nullptr, 0, fmt, args...);
+  std::vector<char> buf(n+1);
+  snprintf(buf.data(), n+1, fmt, args...);
+  return std::string(buf.data());
+}
 
 Point Bresenham(int x1, int y1, int const x2, int const y2)
 {

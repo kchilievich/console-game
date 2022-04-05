@@ -12,6 +12,8 @@ class Enemy : public Entity {
 
   void SetTarget(Entity* NewPlayer);
 
+  virtual std::string GetName() const override { return "Enemy"; }
+
  protected:
   virtual void SetupIcon() override;
   virtual void Reset() override;
