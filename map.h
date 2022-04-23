@@ -26,4 +26,5 @@ class Map {
   void Clear();
 
   vector<vector<Entity*>> EntitiesMap;
+
 };

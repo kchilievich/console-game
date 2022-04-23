@@ -3,6 +3,7 @@
 #include "entities/entity.cpp"
 #include "entities/enemy.cpp"
 #include "entities/player.cpp"
+#include "entities/obstacles/wall.cpp"
 #include "entities/actions/action.h"
 
 Game::Game() {
@@ -12,6 +13,15 @@ Game::Game() {
   // TODO: Remove test section
   Enemy* T = Spawn<Enemy>();
   T->SetTarget(CurrentPlayer);
+
+  for (int y = 0; y < ScreenHeight; y++) {
+    for (int x = 0; x < ScreenWidth; x++) {
+      if (TempMapExample[y][x] > 0) {
+        Wall* NewWall = Spawn<Wall>();
+        NewWall->SetPosition(x, y);
+      }
+    }
+  }
 
   CurrentMap->UpdateEntities(Entities);
 }

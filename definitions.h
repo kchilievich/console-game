@@ -5,6 +5,7 @@
 #define DEFAULT_COLOR_PAIR 1
 #define PLAYER_COLOR_PAIR 2
 #define ENEMY_COLOR_PAIR 3
+#define WALL_COLOR_PAIR 4
 
 #define DEFAULT_SYMBOL string(" ")
 
