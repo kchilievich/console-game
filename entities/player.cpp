@@ -28,6 +28,8 @@ Player::Player() {
 
   Actions = vector<Action*>(3, new Action());
   Actions[0] = new Attack();
+  CurrentX = 1;
+  CurrentY = 1;
 }
 
 const vector<Action*> Player::GetActions() const {

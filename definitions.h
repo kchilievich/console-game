@@ -9,8 +9,8 @@
 
 #define DEFAULT_SYMBOL string(" ")
 
-const int ScreenHeight = 20;
-const int ScreenWidth = 40;
+const int ScreenHeight = 51;
+const int ScreenWidth = 151;
 
 struct Icon {
   int Color;

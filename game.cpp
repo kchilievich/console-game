@@ -6,6 +6,8 @@
 #include "entities/obstacles/wall.cpp"
 #include "entities/actions/action.h"
 
+#include <fstream>
+
 Game::Game() {
   CurrentMap = new Map();
   InitializePlayer();
@@ -14,13 +16,20 @@ Game::Game() {
   Enemy* T = Spawn<Enemy>();
   T->SetTarget(CurrentPlayer);
 
-  for (int y = 0; y < ScreenHeight; y++) {
-    for (int x = 0; x < ScreenWidth; x++) {
-      if (TempMapExample[y][x] > 0) {
-        Wall* NewWall = Spawn<Wall>();
-        NewWall->SetPosition(x, y);
+  int LineNumber = 0;
+  string line;
+  ifstream MapFile("map");
+  if (MapFile.is_open()) {
+    while(getline(MapFile, line)) {
+      for(int i = 0; i < line.length(); i++) {
+        if (line[i] == 'X') {
+          Wall* NewWall = Spawn<Wall>();
+          NewWall->SetPosition(i, LineNumber);
+        }
       }
+      LineNumber++;
     }
+    MapFile.close();
   }
 
   CurrentMap->UpdateEntities(Entities);
