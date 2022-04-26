@@ -32,10 +32,14 @@ int main(int argc, char *argv[]) {
         break;
       }
 
-      if ((x == 0) || (x >= XRoomSize && (x % XRoomSize == 0))) {
-        std::cout << "X";
-      } else if ((y == 0) || (y >= YRoomSize && (y % YRoomSize == 0))) {
-        std::cout << "X";
+      bool bPass = (int)rand() % 10 == 0;
+
+      if ((x == 0) || (x >= XRoomSize && (x % XRoomSize == 0)) || ((y == 0) || (y >= YRoomSize && (y % YRoomSize == 0)))) {
+        if (bPass && x > 0 && x < XSize && y > 0 && y < YSize) {
+          std::cout << " ";
+        } else {
+          std::cout << "X";
+        }
       } else {
         if (ChooseVertical &&
             (y / YRoomSize >= Offset) &&
