@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../definitions.h"
+#include "../utility.cpp"
 #include "../game.h"
 #include "../map.h"
 
@@ -42,11 +43,14 @@ public:
   bool GetIsMarkedForDestroy() const;
 
   virtual bool CanBeSteppedUpon() const;
+  virtual bool BlocksVision() const { return true; };
 
   Attributes* GetAttributes() const;
 
   void SetThisPtr(shared_ptr<Entity> NewThisPtr);
   shared_ptr<Entity> GetThisPtr() const;
+
+  bool CanSeePoint(int x, int y);
 
 protected:
   int CurrentX = 0;
@@ -63,6 +67,8 @@ protected:
   virtual void Reset();
 
   virtual void OnDestroy();
+
+  bool VisionIsBlockedOnPath(vector<Point> VisionLine);
 
 private:
   int CurrentActDelay;
@@ -179,6 +185,26 @@ bool Entity::CheckIntersectionOnMap(int x, int y) const {
   }
 
   return true;
+}
+
+bool Entity::CanSeePoint(int x, int y) {
+  vector<Point> VisionLine = BresenhamLine(CurrentX, CurrentY, x, y);
+
+  return VisionIsBlockedOnPath(VisionLine);
+}
+
+bool Entity::VisionIsBlockedOnPath(vector<Point> VisionLine) {
+  Map* CurrentMap = Game::GetInstance()->GetMap();
+
+  for (Point VisionPoint : VisionLine) {
+    Entity* EntityOnLocation = CurrentMap->GetEntity(VisionPoint.X, VisionPoint.Y);
+
+    if (EntityOnLocation != nullptr && EntityOnLocation->BlocksVision()) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void Entity::SetThisPtr(shared_ptr<Entity> NewThisPtr) {

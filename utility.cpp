@@ -13,9 +13,10 @@ std::string FormatString(const char *fmt, Args... args)
   return std::string(buf.data());
 }
 
-Point Bresenham(int x1, int y1, int const x2, int const y2)
+// To find next point
+vector<Point> BresenhamLine(int x1, int y1, int x2, int y2)
 {
-  Point Result;
+  vector<Point> Result;
 
   int delta_x(x2 - x1);
   // if x1 == x2, then it does not matter what we set here
@@ -26,8 +27,6 @@ Point Bresenham(int x1, int y1, int const x2, int const y2)
   // if y1 == y2, then it does not matter what we set here
   signed char const iy((delta_y > 0) - (delta_y < 0));
   delta_y = std::abs(delta_y) << 1;
-
-  Result = Point { x1, y1 };
 
   if (delta_x >= delta_y)
     {
@@ -47,7 +46,7 @@ Point Bresenham(int x1, int y1, int const x2, int const y2)
           error += delta_y;
           x1 += ix;
 
-          return Point { x1, y1 };
+          Result.push_back(Point { x1, y1 });
         }
     }
   else
@@ -68,7 +67,7 @@ Point Bresenham(int x1, int y1, int const x2, int const y2)
           error += delta_x;
           y1 += iy;
 
-          return Point { x1, y1 };
+          Result.push_back(Point { x1, y1 });
         }
     }
 

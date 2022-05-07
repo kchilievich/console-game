@@ -27,8 +27,10 @@ Game::Game() {
           NewWall->SetPosition(i, LineNumber);
         }
       }
+
       LineNumber++;
     }
+
     MapFile.close();
   }
 

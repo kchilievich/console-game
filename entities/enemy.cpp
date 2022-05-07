@@ -32,16 +32,23 @@ void Enemy::Act() {
     // Follow target
     int TargetX = Target->GetX();
     int TargetY = Target->GetY();
-    Point NextPoint = Bresenham(CurrentX, CurrentY, Target->GetX(), Target->GetY());
 
-    if (NextPoint.X < CurrentX) { MoveLeft(); }
-    else if (NextPoint.X > CurrentX) { MoveRight(); }
-    else if (NextPoint.Y > CurrentY) { MoveDown(); }
-    else if (NextPoint.Y < CurrentY) { MoveUp(); }
+    vector<Point> Path = BresenhamLine(CurrentX, CurrentY, TargetX, TargetY);
 
-    //Attack target
-    if (abs(TargetX - CurrentX) + abs(TargetY - CurrentY) <= 1) {
-      AttackAction->Perform(this, Target);
+    if (!VisionIsBlockedOnPath(Path)) {
+      Point NextPoint = Path[0];
+
+      if (NextPoint.X < CurrentX) { MoveLeft(); }
+      else if (NextPoint.X > CurrentX) { MoveRight(); }
+      else if (NextPoint.Y > CurrentY) { MoveDown(); }
+      else if (NextPoint.Y < CurrentY) { MoveUp(); }
+
+      //Attack target
+      if (abs(TargetX - CurrentX) + abs(TargetY - CurrentY) <= 1) {
+        AttackAction->Perform(this, Target);
+      }
     }
   }
+
+  // walk around randomly
 }

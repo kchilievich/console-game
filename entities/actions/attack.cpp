@@ -7,7 +7,7 @@ class Attack : public Action {
 public:
   virtual string GetName() const override { return "Basic Attack"; }
 
-  virtual void Perform(Entity* Source, Entity* Target);
+  virtual void Perform(Entity* Source, Entity* Target) override;
 };
 
 void Attack::Perform(Entity* Source, Entity* Target) {
