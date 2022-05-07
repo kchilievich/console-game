@@ -27,12 +27,12 @@ class Game {
   Map* GetMap() const;
 
   template<class T>
-  T* Spawn();
+  T* Spawn(int x, int y);
 
   void Over();
 
  private:
-  void InitializePlayer();
+  void InitializePlayer(int x, int y);
   void ConsumePlayerInput(int ch);
 
   vector<Entity*> Entities;

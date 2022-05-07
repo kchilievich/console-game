@@ -10,7 +10,7 @@ public:
 
   const vector<Action*> GetActions() const;
   virtual std::string GetName() const override { return "Player"; }
-  virtual bool BlocksVision() const { return false; };
+  virtual bool BlocksVision() const override { return false; };
 
   void ProcessInput(int Char);
 

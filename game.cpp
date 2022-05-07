@@ -10,11 +10,6 @@
 
 Game::Game() {
   CurrentMap = new Map();
-  InitializePlayer();
-
-  // TODO: Remove test section
-  Enemy* T = Spawn<Enemy>();
-  T->SetTarget(CurrentPlayer);
 
   int LineNumber = 0;
   string line;
@@ -22,9 +17,14 @@ Game::Game() {
   if (MapFile.is_open()) {
     while(getline(MapFile, line)) {
       for(int i = 0; i < line.length(); i++) {
+        // Wall
         if (line[i] == 'X') {
-          Wall* NewWall = Spawn<Wall>();
-          NewWall->SetPosition(i, LineNumber);
+          Wall* NewWall = Spawn<Wall>(i, LineNumber);
+        }
+
+        // Player start
+        if (line[i] == 'S' && CurrentPlayer == nullptr) {
+          InitializePlayer(i, LineNumber);
         }
       }
 
@@ -33,6 +33,11 @@ Game::Game() {
 
     MapFile.close();
   }
+
+  // TODO: Remove test section
+  Enemy* T = Spawn<Enemy>(1, 1);
+  T->SetTarget(CurrentPlayer);
+  //- Test section end
 
   CurrentMap->UpdateEntities(Entities);
 }
@@ -50,11 +55,12 @@ void Game::AddMessage(string NewMessage) {
 }
 
 template<class T>
-T* Game::Spawn() {
+T* Game::Spawn(int x, int y) {
   shared_ptr<T> NewInstance(new T());
   Entity* EntityInstance = static_cast<Entity*>(NewInstance.get());
   Entities.push_back(EntityInstance);
   EntityInstance->SetThisPtr(NewInstance);
+  EntityInstance->SetPosition(x, y);
 
   return NewInstance.get();
 }
@@ -71,8 +77,8 @@ Player* Game::GetPlayer() const {
   return CurrentPlayer;
 }
 
-void Game::InitializePlayer() {
-  CurrentPlayer = Spawn<Player>();
+void Game::InitializePlayer(int x, int y) {
+  CurrentPlayer = Spawn<Player>(x, y);
 }
 
 void Game::ConsumePlayerInput(int ch) {

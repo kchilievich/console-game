@@ -39,6 +39,8 @@ public:
   void MoveLeft();
   void MoveRight();
 
+  void SetPosition(int x, int y);
+
   void Destroy();
   bool GetIsMarkedForDestroy() const;
 
@@ -163,6 +165,11 @@ void Entity::MoveRight() {
   if (CheckIntersectionOnMap(NewX, CurrentY)) {
     CurrentX = NewX;
   }
+}
+
+void Entity::SetPosition(int x, int y) {
+  CurrentX = x;
+  CurrentY = y;
 }
 
 void Entity::OnDestroy() {}
